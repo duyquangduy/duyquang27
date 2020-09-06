@@ -1,9 +1,5 @@
 package activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,6 +10,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.appbanhang.R;
 import com.squareup.picasso.Picasso;
@@ -38,30 +38,44 @@ public class ChiTietSanPham extends AppCompatActivity {
     String Motachitiet = "";
     int Idsanpham = 0;
 
+    CartCounter cartCounter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chi_tiet_san_pham);
 
         anhxa();
+
+        cartCounter = new CartCounter(findViewById(R.id.cartlayout));
+
         ActionToolbar();
         GetInformation();
         CatchEventSpinner();
         EventButton();
+
+        cartCounter.img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ChiTietSanPham.this, activity.Giohang.class);
+                startActivity(intent);
+            }
+        });
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu,menu);
+        getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.menugiohang:
-                Intent intent = new Intent(getApplicationContext(), activity.Giohang.class);
-                startActivity(intent);
-        }
+//        switch (item.getItemId()){
+//            case R.id.menugiohang:
+//                Intent intent = new Intent(getApplicationContext(), activity.Giohang.class);
+//                startActivity(intent);
+//        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -69,28 +83,31 @@ public class ChiTietSanPham extends AppCompatActivity {
         btndatmua.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(MainActivity.manggiohang.size() > 0){
+                if (MainActivity.manggiohang.size() > 0) {
                     int sl = Integer.parseInt(spinner.getSelectedItem().toString());
                     boolean exists = false;
                     for (int i = 0; i < MainActivity.manggiohang.size(); i++) {
-                        if(MainActivity.manggiohang.get(i).getIdsp() == id){
+                        if (MainActivity.manggiohang.get(i).getIdsp() == id) {
                             MainActivity.manggiohang.get(i).setSoluongsp(MainActivity.manggiohang.get(i).getSoluongsp() + sl);
-                            if(MainActivity.manggiohang.get(i).getSoluongsp() >= 10){
+                            if (MainActivity.manggiohang.get(i).getSoluongsp() >= 10) {
                                 MainActivity.manggiohang.get(i).setSoluongsp(10);
                             }
                             MainActivity.manggiohang.get(i).setGiasp(Giachitiet * MainActivity.manggiohang.get(i).getSoluongsp());
                             exists = true;
+                            cartCounter.setText(MainActivity.manggiohang.size());
                         }
                     }
-                    if(exists == false){
+                    if (exists == false) {
                         int soluong = Integer.parseInt(spinner.getSelectedItem().toString());
                         long Giamoi = soluong * Giachitiet;
-                        MainActivity.manggiohang.add(new Giohang(id,Tenchitiet,Giamoi,Hinhanhchitiet,soluong));
+                        MainActivity.manggiohang.add(new Giohang(id, Tenchitiet, Giamoi, Hinhanhchitiet, soluong));
+                        cartCounter.setText(MainActivity.manggiohang.size());
                     }
-                }else {
+                } else {
                     int soluong = Integer.parseInt(spinner.getSelectedItem().toString());
                     long Giamoi = soluong * Giachitiet;
-                    MainActivity.manggiohang.add(new Giohang(id,Tenchitiet,Giamoi,Hinhanhchitiet,soluong));
+                    MainActivity.manggiohang.add(new Giohang(id, Tenchitiet, Giamoi, Hinhanhchitiet, soluong));
+                    cartCounter.setText(MainActivity.manggiohang.size());
                 }
                 Intent intent = new Intent(getApplicationContext(), activity.Giohang.class);
                 startActivity(intent);
@@ -99,8 +116,8 @@ public class ChiTietSanPham extends AppCompatActivity {
     }
 
     private void CatchEventSpinner() {
-        Integer[] soluong = new Integer[]{1,2,3,4,5,6,7,8,9,10};
-        ArrayAdapter<Integer> arrayAdapter = new ArrayAdapter<Integer>(this,android.R.layout.simple_spinner_dropdown_item,soluong);
+        Integer[] soluong = new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        ArrayAdapter<Integer> arrayAdapter = new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_dropdown_item, soluong);
         spinner.setAdapter(arrayAdapter);
     }
 
@@ -142,5 +159,17 @@ public class ChiTietSanPham extends AppCompatActivity {
         txtmota = findViewById(R.id.textviewmotachitietsanpham);
         spinner = findViewById(R.id.spinner);
         btndatmua = findViewById(R.id.buttondatmua);
+    }
+
+    @Override
+    protected void onResume() {
+        cartCounter.setText(MainActivity.manggiohang.size());
+        super.onResume();
+    }
+
+    @Override
+    protected void onRestart() {
+        cartCounter.setText(MainActivity.manggiohang.size());
+        super.onRestart();
     }
 }

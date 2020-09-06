@@ -1,26 +1,22 @@
 package activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
-
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+
 import com.example.appbanhang.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 public class ThongtinActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -76,7 +72,7 @@ public class ThongtinActivity extends AppCompatActivity implements OnMapReadyCal
         mMap.setMyLocationEnabled(true);
         // Add a marker in Sydney and move the camera
         LatLng nhacuaQuang = new LatLng(20.958356, 105.804742);
-        mMap.addMarker(new MarkerOptions().position(nhacuaQuang).title("My Sweet Home").snippet("Chung cu Cau Buou").icon(BitmapDescriptorFactory.defaultMarker()));
+        //mMap.addMarker(new MarkerOptions().position(nhacuaQuang).title("My Sweet Home").snippet("Chung cu Cau Buou").icon(BitmapDescriptorFactory.defaultMarker()));
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         CameraPosition cameraPosition = new CameraPosition.Builder().target(nhacuaQuang).zoom(90).build();
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));

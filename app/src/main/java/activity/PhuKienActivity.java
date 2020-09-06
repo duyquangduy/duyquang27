@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,32 +33,34 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import adapter.DienThoaiAdapter;
+import adapter.PhuKienAdapter;
 import model.Sanpham;
 import ultil.CheckConnection;
 import ultil.Server;
 
-public class DienThoaiActivity extends AppCompatActivity {
-    Toolbar toolbardt;
-    ListView lvdt;
-    DienThoaiAdapter dienThoaiAdapter;
-    ArrayList<Sanpham> mangdt;
-    int iddt = 0;
+public class PhuKienActivity extends AppCompatActivity {
+
+    Toolbar toolbarphukien;
+    ListView lvphukien;
+    PhuKienAdapter phuKienAdapter;
+    ArrayList<Sanpham> mangphukien;
+    int idphukien = 0;
     int page = 1;
 
     View footerView;
     boolean isLoading = false;
-    mHandler mHandler;
+    PhuKienActivity.mHandler mHandler;
     boolean limitdata = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dien_thoai);
+        setContentView(R.layout.activity_phu_kien);
 
-        anhxa();
+
         if (CheckConnection.haveNetworkConnection(getApplicationContext())) {
-            GetIdloaisanpham();   //nhan tu intent cua main activity
+            anhxa();
+            GetIdloaisanpham();
             ActionToolbar();
             GetData(page);
             LoadMoreData();
@@ -80,16 +81,97 @@ public class DienThoaiActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void anhxa() {
+        toolbarphukien = findViewById(R.id.toolbarphukien);
+        lvphukien = findViewById(R.id.listviewphukien);
+        mangphukien = new ArrayList<>();
+        phuKienAdapter = new PhuKienAdapter(getApplicationContext(), mangphukien);
+        lvphukien.setAdapter(phuKienAdapter);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        footerView = inflater.inflate(R.layout.progressbar, null);
+        mHandler = new PhuKienActivity.mHandler();
+    }
+
+    private void GetIdloaisanpham() {
+        idphukien = getIntent().getIntExtra("idloaisanpham", -1);
+    }
+
+    private void ActionToolbar() {
+        setSupportActionBar(toolbarphukien);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbarphukien.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
+
+    private void GetData(int Page) {
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        String duongdan = Server.Duongdandienthoai + String.valueOf(Page);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, duongdan,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        int id = 0;
+                        String TenPhuKien = "";
+                        int GiaPhuKien = 0;
+                        String HinhAnhPhuKien = "";
+                        String MotaPhuKien = "";
+                        int IdspPhuKien = 0;
+                        if (response != null && response.length() != 2) {  //khac []
+                            lvphukien.removeFooterView(footerView);
+                            try {
+                                JSONArray jsonArray = new JSONArray(response);
+                                for (int i = 0; i < response.length(); i++) {
+                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                    id = jsonObject.getInt("id");
+                                    TenPhuKien = jsonObject.getString("tensp");
+                                    GiaPhuKien = jsonObject.getInt("giasp");
+                                    HinhAnhPhuKien = jsonObject.getString("hinhanhsp");
+                                    MotaPhuKien = jsonObject.getString("motasp");
+                                    IdspPhuKien = jsonObject.getInt("idsanpham");
+                                    mangphukien.add(new Sanpham(id, TenPhuKien, GiaPhuKien, HinhAnhPhuKien, MotaPhuKien, IdspPhuKien));
+                                    phuKienAdapter.notifyDataSetChanged();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            limitdata = true;
+                            lvphukien.removeFooterView(footerView);
+                            CheckConnection.ShowToast_Short(getApplicationContext(), "Đã hết dữ liệu");
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError { //day du lieu len
+                HashMap<String, String> param = new HashMap<String, String>();
+                param.put("idsanpham", String.valueOf(idphukien)); //key de giong trong file getsanpham.php
+                return param;
+            }
+        };
+        requestQueue.add(stringRequest);
+    }
+
     private void LoadMoreData() {
-        lvdt.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lvphukien.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), ChiTietSanPham.class);
-                intent.putExtra("thongtinsanpham", mangdt.get(position));
+                intent.putExtra("thongtinsanpham", mangphukien.get(position));
                 startActivity(intent);
             }
         });
-        lvdt.setOnScrollListener(new AbsListView.OnScrollListener() {
+        lvphukien.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
 
@@ -107,94 +189,12 @@ public class DienThoaiActivity extends AppCompatActivity {
         });
     }
 
-    private void GetData(int Page) {
-        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-        String duongdan = Server.Duongdandienthoai + String.valueOf(Page);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, duongdan,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        int id = 0;
-                        String Tendt = "";
-                        int Giadt = 0;
-                        String Hinhanhdt = "";
-                        String Mota = "";
-                        int Idspdt = 0;
-                        if (response != null && response.length() != 2) {
-                            lvdt.removeFooterView(footerView);
-                            try {
-                                JSONArray jsonArray = new JSONArray(response);
-                                for (int i = 0; i < response.length(); i++) {
-                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                    id = jsonObject.getInt("id");
-                                    Tendt = jsonObject.getString("tensp");
-                                    Giadt = jsonObject.getInt("giasp");
-                                    Hinhanhdt = jsonObject.getString("hinhanhsp");
-                                    Mota = jsonObject.getString("motasp");
-                                    Idspdt = jsonObject.getInt("idsanpham");
-                                    mangdt.add(new Sanpham(id, Tendt, Giadt, Hinhanhdt, Mota, Idspdt));
-                                    dienThoaiAdapter.notifyDataSetChanged();
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            limitdata = true;
-                            lvdt.removeFooterView(footerView);
-                            CheckConnection.ShowToast_Short(getApplicationContext(), "Đã hết dữ liệu");
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                    }
-                }
-        ) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError { //day du lieu len
-                HashMap<String, String> param = new HashMap<String, String>();
-                param.put("idsanpham", String.valueOf(iddt)); //key de giong trong file getsanpham.php
-                return param;
-            }
-        };
-        requestQueue.add(stringRequest);
-    }
-
-    private void ActionToolbar() {
-        setSupportActionBar(toolbardt);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbardt.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-    }
-
-    private void GetIdloaisanpham() {
-        iddt = getIntent().getIntExtra("idloaisanpham", -1);
-        Log.d("Giatriloaisanpham", iddt + "");
-    }
-
-    private void anhxa() {
-        toolbardt = findViewById(R.id.toolbardienthoai);
-        lvdt = findViewById(R.id.listviewdienthoai);
-        mangdt = new ArrayList<>();
-        dienThoaiAdapter = new DienThoaiAdapter(getApplicationContext(), mangdt);
-        lvdt.setAdapter(dienThoaiAdapter);
-        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        footerView = inflater.inflate(R.layout.progressbar, null);
-        mHandler = new mHandler();
-    }
-
     public class mHandler extends Handler {
         @Override
         public void handleMessage(@NonNull Message msg) {
             switch (msg.what) {
                 case 0:
-                    lvdt.addFooterView(footerView);
+                    lvphukien.addFooterView(footerView);
                     break;
                 case 1:
                     GetData(++page);
@@ -236,11 +236,10 @@ public class DienThoaiActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                dienThoaiAdapter.getFilter().filter(newText);
+                phuKienAdapter.getFilter().filter(newText);
                 return false;
             }
         });
         return super.onCreateOptionsMenu(menu);
     }
-
 }

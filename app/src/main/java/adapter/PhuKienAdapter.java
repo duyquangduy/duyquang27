@@ -18,15 +18,15 @@ import java.util.List;
 
 import model.Sanpham;
 
-public class DienThoaiAdapter extends BaseAdapter {
+public class PhuKienAdapter extends BaseAdapter {
     Context context;
-    ArrayList<Sanpham> arraydienthoai;
+    ArrayList<Sanpham> arrayphukien;
     ArrayList<Sanpham> dataFilter;
 
-    public DienThoaiAdapter(Context context, ArrayList<Sanpham> arraydienthoai) {
+    public PhuKienAdapter(Context context, ArrayList<Sanpham> arrayphukien) {
         this.context = context;
-        this.arraydienthoai = arraydienthoai;
-        this.dataFilter = arraydienthoai;
+        this.arrayphukien = arrayphukien;
+        this.dataFilter = arrayphukien;
     }
 
     @Override
@@ -45,39 +45,37 @@ public class DienThoaiAdapter extends BaseAdapter {
     }
 
     public class ViewHolder {
-        public TextView txttendienthoai, txtgiadienthoai, txtmotadienthoai;
-        public ImageView imgdienthoai;
+        public TextView txttenphukien, txtgiaphukien, txtmotaphukien;
+        public ImageView imgphukien;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder = null;
+        PhuKienAdapter.ViewHolder viewHolder = null;
         if (convertView == null) {
             viewHolder = new ViewHolder();
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.dong_dien_thoai, null);
+            convertView = inflater.inflate(R.layout.dong_phu_kien, null);
 
-            viewHolder.txttendienthoai = convertView.findViewById(R.id.textviewdienthoai);
-            viewHolder.txtgiadienthoai = convertView.findViewById(R.id.textviewgiadienthoai);
-            viewHolder.txtmotadienthoai = convertView.findViewById(R.id.textviewmotadienthoai);
-            viewHolder.imgdienthoai = convertView.findViewById(R.id.imageviewdienthoai);
+            viewHolder.txttenphukien = convertView.findViewById(R.id.textviewphukien);
+            viewHolder.txtgiaphukien = convertView.findViewById(R.id.textviewgiaphukien);
+            viewHolder.txtmotaphukien = convertView.findViewById(R.id.textviewmotaphukien);
+            viewHolder.imgphukien = convertView.findViewById(R.id.imageviewphukien);
             convertView.setTag(viewHolder);
         } else {
-            viewHolder = (ViewHolder) convertView.getTag();
+            viewHolder = (PhuKienAdapter.ViewHolder) convertView.getTag();
         }
         Sanpham sanpham = (Sanpham) getItem(position);
-        viewHolder.txttendienthoai.setText(sanpham.getTensanpham());
+        viewHolder.txttenphukien.setText(sanpham.getTensanpham());
         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
-        viewHolder.txtgiadienthoai.setText("Giá: " + decimalFormat.format(sanpham.getGiasanpham()) + " vnd");
+        viewHolder.txtgiaphukien.setText("Giá: " + decimalFormat.format(sanpham.getGiasanpham()) + " vnd");
 
-//        viewHolder.txtmotadienthoai.setMaxLines(2);
-//        viewHolder.txtmotadienthoai.setEllipsize(TextUtils.TruncateAt.END); //mo ta qua 2 dong thi co dau 3 cham
-        viewHolder.txtmotadienthoai.setText(sanpham.getMotasanpham());
+        //viewHolder.txtmotaphukien.setText(sanpham.getMotasanpham());
 
         Picasso.get().load(sanpham.getHinhanhsanpham())
                 .placeholder(R.drawable.no_image)
                 .error(R.drawable.cancel)
-                .into(viewHolder.imgdienthoai);
+                .into(viewHolder.imgphukien);
         return convertView;
     }
 
@@ -87,10 +85,10 @@ public class DienThoaiAdapter extends BaseAdapter {
             protected FilterResults performFiltering(CharSequence constraint) {
                 String key = constraint.toString();
                 if (key.isEmpty()) {
-                    dataFilter = arraydienthoai;
+                    dataFilter = arrayphukien;
                 } else {
                     List<Sanpham> listfilter = new ArrayList<>();
-                    for (Sanpham item : arraydienthoai) {
+                    for (Sanpham item : arrayphukien) {
                         if (item.getTensanpham().toLowerCase().contains(key)) {
                             listfilter.add(item);
                         }

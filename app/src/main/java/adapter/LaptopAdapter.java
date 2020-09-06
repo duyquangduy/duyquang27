@@ -1,10 +1,12 @@
 package adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,26 +15,29 @@ import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import model.Sanpham;
 
 public class LaptopAdapter extends BaseAdapter {
     Context context;
     ArrayList<Sanpham> arraylaptop;
+    ArrayList<Sanpham> dataFilter;
 
     public LaptopAdapter(Context context, ArrayList<Sanpham> arraylaptop) {
         this.context = context;
         this.arraylaptop = arraylaptop;
+        this.dataFilter = arraylaptop;
     }
 
     @Override
     public int getCount() {
-        return arraylaptop.size();
+        return dataFilter.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return arraylaptop.get(position);
+        return dataFilter.get(position);
     }
 
     @Override
@@ -75,5 +80,34 @@ public class LaptopAdapter extends BaseAdapter {
                 .error(R.drawable.cancel)
                 .into(viewHolder.imglaptop);
         return convertView;
+    }
+    public Filter getFilter(){
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                String key = constraint.toString();
+                if(key.isEmpty()){
+                    dataFilter = arraylaptop;
+                }else {
+                    List<Sanpham> listfilter = new ArrayList<>();
+                    for(Sanpham item : arraylaptop){
+                        if(item.getTensanpham().toLowerCase().contains(key)){
+                            Log.d("AAA",item.getTensanpham()+" - "+key);
+                            listfilter.add(item);
+                        }
+                    }
+                    dataFilter = (ArrayList<Sanpham>) listfilter;
+                }
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = dataFilter;
+                return  filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                dataFilter = (ArrayList<Sanpham>) results.values;
+                notifyDataSetChanged();
+            }
+        };
     }
 }

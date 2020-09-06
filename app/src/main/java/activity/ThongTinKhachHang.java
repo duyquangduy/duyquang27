@@ -1,13 +1,13 @@
 package activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -22,7 +22,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -97,6 +96,10 @@ public class ThongTinKhachHang extends AppCompatActivity {
                                         for (int i = 0; i < MainActivity.manggiohang.size(); i++) {
                                             JSONObject jsonObject = new JSONObject();
                                             try {
+                                                Intent intent = getIntent();
+                                                int luotmua = intent.getIntExtra("luotmua",-1);
+                                                Log.d("GGG",luotmua+"");
+//                                                jsonObject.put("luotmua",intent.getIntExtra("luotmua",0));
                                                 jsonObject.put("madonhang", madonhang);
                                                 jsonObject.put("masanpham", MainActivity.manggiohang.get(i).getIdsp());
                                                 jsonObject.put("tensanpham", MainActivity.manggiohang.get(i).getTensp());

@@ -10,10 +10,25 @@
 <androidx.appcompat.widget.Toolbar
     android:id="@+id/toolbarchitietsanpham"
     app:titleTextColor="#121212"
-    android:background="#DD432C"
+    android:background="#CDDC39"
     app:title="Chi tiết sản phẩm"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="200dp">
+
+        <include
+            android:layout_marginLeft="10dp"
+            android:id="@+id/cartlayout"
+            layout="@layout/cart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.appcompat.widget.Toolbar>
     <LinearLayout
         android:orientation="horizontal"
@@ -89,14 +104,19 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <TextView
+            <com.borjabravo.readmoretextview.ReadMoreTextView
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp"
                 android:textSize="20sp"
                 android:paddingBottom="10dp"
                 android:id="@+id/textviewmotachitietsanpham"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:trimExpandedText="Xem thêm"
+                app:trimCollapsedText="Thu gọn"
+                app:trimMode="trimModeLine"
+                app:trimLength="50"
+                app:colorClickableText="@android:color/holo_blue_light"/>
         </ScrollView>
     </LinearLayout>
 </LinearLayout>

@@ -1,14 +1,9 @@
 package activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,6 +11,10 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -34,7 +33,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import adapter.DienThoaiAdapter;
 import adapter.LaptopAdapter;
 import model.Sanpham;
 import ultil.CheckConnection;
@@ -71,19 +69,14 @@ public class LaptopActivity extends AppCompatActivity {
         }
 
     }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu,menu);
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.menugiohang:
-                Intent intent = new Intent(getApplicationContext(), activity.Giohang.class);
-                startActivity(intent);
-        }
+//        switch (item.getItemId()){
+//            case R.id.menugiohang:
+//                Intent intent = new Intent(getApplicationContext(), activity.Giohang.class);
+//                startActivity(intent);
+//        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -223,5 +216,28 @@ public class LaptopActivity extends AppCompatActivity {
             mHandler.sendMessage(message);
             super.run();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search_view,menu);
+
+        MenuItem menuitem = menu.findItem(R.id.menu_search);
+
+
+        android.widget.SearchView searchView1 = (android.widget.SearchView) menuitem.getActionView();
+        searchView1.setOnQueryTextListener(new android.widget.SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                laptopAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
     }
 }

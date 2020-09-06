@@ -16,23 +16,32 @@
             android:layout_height="match_parent">
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbarmanhinhchinh"
-                android:background="#406DF4"
+                android:background="#A2D863"
                 app:title="Trang chính "
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize">
+                <include
+                        android:id="@+id/cartlayoutMain"
+                        layout="@layout/cart"
+                        android:layout_width="wrap_content"
+                    android:layout_marginLeft="200dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_marginRight="16dp"/>
+
             </androidx.appcompat.widget.Toolbar>
             <ViewFlipper
                 android:id="@+id/viewflipper"
                 android:layout_width="match_parent"
-                android:layout_height="200dp">
+                android:layout_height="150dp">
             </ViewFlipper>
             <LinearLayout
-                android:background="#4C73E6"
+                android:background="#A2D863"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
                 <TextView
-                    android:textSize="20sp"
+                    android:textSize="19sp"
                     android:textStyle="bold"
                     android:textColor="#F82404"
                     android:layout_margin="5dp"
@@ -42,7 +51,21 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerview"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content">
+
+                </androidx.recyclerview.widget.RecyclerView>
+                <TextView
+                    android:textSize="19sp"
+                    android:textStyle="bold"
+                    android:textColor="#F82404"
+                    android:layout_margin="5dp"
+                    android:text="Sản phẩm bán chạy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerviewsphot"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
                 </androidx.recyclerview.widget.RecyclerView>
 
@@ -54,7 +77,49 @@
             android:layout_gravity="start"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="150dp">
+                <ImageView
+
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:background="@drawable/shop_background"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal"
+                    android:layout_weight="10"
+                    android:background="@android:color/holo_blue_light"
+                    android:padding="5dp">
+                    <ImageView
+                        android:id="@+id/imgAvatar"
+                        android:layout_weight="3"
+                        android:src="@drawable/ic_person_black_24dp"
+                        android:layout_width="0dp"
+                        android:layout_height="70dp"/>
+                    <TextView
+                        android:id="@+id/txtUser"
+                        android:layout_gravity="center_vertical|start"
+                        android:layout_weight="5"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textSize="14dp"
+                        android:text="Đăng nhập để mua hàng"
+                        android:textColor="#F2F6F6"/>
+                    <com.facebook.login.widget.LoginButton
+                        android:layout_marginRight="15dp"
+
+                        android:id="@+id/btnLogin"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_gravity="center"/>
+                </LinearLayout>
+            </LinearLayout>
             <ListView
+                android:layout_marginTop="150dp"
                 android:id="@+id/listviewmanhinhchinh"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>

@@ -1,6 +1,8 @@
 package adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import activity.MainActivity;
+import activity.ThongTinKhachHang;
 import model.Giohang;
 
 public class GioHangAdapter extends BaseAdapter {
@@ -91,6 +94,10 @@ public class GioHangAdapter extends BaseAdapter {
             public void onClick(View v) {
                 int solmoinhat = Integer.parseInt(finalViewHolder.btnvalue.getText().toString())+1;
                 int slht = MainActivity.manggiohang.get(position).getSoluongsp();
+                Intent intent2 = new Intent(context, ThongTinKhachHang.class);
+                intent2.putExtra("luotmua",slht);
+                Log.d("MMM",slht+1+"");
+
                 long giaht = MainActivity.manggiohang.get(position).getGiasp();
                 MainActivity.manggiohang.get(position).setSoluongsp(solmoinhat);
                 long giamoinhat = (giaht * solmoinhat)/slht;
@@ -107,6 +114,7 @@ public class GioHangAdapter extends BaseAdapter {
                     finalViewHolder.btnplus.setVisibility(View.VISIBLE);
                     finalViewHolder.btnvalue.setText(String.valueOf(solmoinhat));
                 }
+
             }
         });
         viewHolder.btnminus.setOnClickListener(new View.OnClickListener() {
