@@ -72,11 +72,6 @@ public class LaptopActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//        switch (item.getItemId()){
-//            case R.id.menugiohang:
-//                Intent intent = new Intent(getApplicationContext(), activity.Giohang.class);
-//                startActivity(intent);
-//        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -119,7 +114,7 @@ public class LaptopActivity extends AppCompatActivity {
                         String Hinhanhlaptop = "";
                         String Motalaptop = "";
                         int Idsplaptop = 0;
-                        if(response != null && response.length() != 2){  //khac []
+                        if(response != null && response.length() != 2){  //khac [] (2 ký tự)
                             lvlaptop.removeFooterView(footerView);
                             try {
                                 JSONArray jsonArray = new JSONArray(response);

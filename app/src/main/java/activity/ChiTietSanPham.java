@@ -16,6 +16,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.appbanhang.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
@@ -38,7 +40,18 @@ public class ChiTietSanPham extends AppCompatActivity {
     String Motachitiet = "";
     int Idsanpham = 0;
 
+    int idtimkiem = 0;
+    String tentimkiem = "";
+    int giatimkiem = 0;
+    String hinhanhtimkiem = "";
+    String motatimkiem = "";
+
     CartCounter cartCounter;
+
+
+
+    private FirebaseAuth mAuth;
+    private DatabaseReference shoppingCart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +64,7 @@ public class ChiTietSanPham extends AppCompatActivity {
 
         ActionToolbar();
         GetInformation();
+        //GetInfoTimKiem();
         CatchEventSpinner();
         EventButton();
 
@@ -63,6 +77,23 @@ public class ChiTietSanPham extends AppCompatActivity {
         });
     }
 
+//    private void GetInfoTimKiem() {
+//        TimKiemSanPham timKiemSanPham = (TimKiemSanPham) getIntent().getSerializableExtra("thongtintimkiem");
+//        idtimkiem = timKiemSanPham.getIdsanpham();
+//        tentimkiem = timKiemSanPham.getTensanpham();
+//        giatimkiem = timKiemSanPham.getGiasanpham();
+//        hinhanhtimkiem = timKiemSanPham.getHinhanhsanpham();
+//        motatimkiem = timKiemSanPham.getMotasanpham();
+//        txtten.setText(tentimkiem);
+//        DecimalFormat decimalFormat2 = new DecimalFormat("###,###,###");
+//        txtgia.setText("Giá: " + decimalFormat2.format(Giachitiet) + " vnđ");
+//        txtmota.setText(motatimkiem);
+//        Picasso.get().load(hinhanhtimkiem)
+//                .placeholder(R.drawable.no_image)
+//                .error(R.drawable.cancel)
+//                .into(imgChitiet);
+//    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
@@ -71,11 +102,6 @@ public class ChiTietSanPham extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//        switch (item.getItemId()){
-//            case R.id.menugiohang:
-//                Intent intent = new Intent(getApplicationContext(), activity.Giohang.class);
-//                startActivity(intent);
-//        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -123,6 +149,7 @@ public class ChiTietSanPham extends AppCompatActivity {
 
     private void GetInformation() {
         Sanpham sanpham = (Sanpham) getIntent().getSerializableExtra("thongtinsanpham");
+
         id = sanpham.getID();
         Tenchitiet = sanpham.getTensanpham();
         Giachitiet = sanpham.getGiasanpham();

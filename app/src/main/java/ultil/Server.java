@@ -12,4 +12,6 @@ public class Server {
     public static String Duongdandienthoai = "https://daoduyquang27.000webhostapp.com/ServerBanHang/getsanpham.php?page=";
     public static String Duongdandonhang = "https://daoduyquang27.000webhostapp.com/ServerBanHang/thongtinkhachhang.php";
     public static String Duongdanchitietdonhang = "https://daoduyquang27.000webhostapp.com/ServerBanHang/chitietdonhang.php";
+    public static String Duongdanlichsumuahang = "https://daoduyquang27.000webhostapp.com/ServerBanHang/getlichsumuahang.php";
+    public static String Duongdantimkiemsanpham = "https://daoduyquang27.000webhostapp.com/ServerBanHang/getsanphamtimkiem.php";
 }

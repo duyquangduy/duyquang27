@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -46,19 +47,23 @@ public class Giohang extends AppCompatActivity {
         btntieptucmua.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
             }
         });
         btnthanhtoan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(MainActivity.manggiohang.size() > 0){  //phai co hang moi thanh toan duoc
-                    Intent intent = new Intent(getApplicationContext(),ThongTinKhachHang.class);
-                    startActivity(intent);
+                if(MainActivity.userId == null){
+                    Toast.makeText(Giohang.this, "Xin mời bạn đăng nhập để mua hàng", Toast.LENGTH_SHORT).show();
                 }else {
-                    CheckConnection.ShowToast_Short(getApplicationContext(),"Không có sản phẩm để thanh toán");
+                if (MainActivity.manggiohang.size() > 0) {  //phai co hang moi thanh toan duoc
+                    Intent intent = new Intent(getApplicationContext(), ThongTinKhachHang.class);
+                    startActivity(intent);
+                } else {
+                    CheckConnection.ShowToast_Short(getApplicationContext(), "Không có sản phẩm để thanh toán");
                 }
+            }
             }
         });
     }
@@ -73,15 +78,15 @@ public class Giohang extends AppCompatActivity {
                 builder.setPositiveButton("Có", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(MainActivity.manggiohang.size() <= 0){
+                        if (MainActivity.manggiohang.size() <= 0) {
                             txtthongbao.setVisibility(View.VISIBLE);
-                        }else {
+                        } else {
                             MainActivity.manggiohang.remove(position);
                             gioHangAdapter.notifyDataSetChanged();
                             EventUltil();
-                            if(MainActivity.manggiohang.size() <= 0){
+                            if (MainActivity.manggiohang.size() <= 0) {
                                 txtthongbao.setVisibility(View.VISIBLE);
-                            }else {
+                            } else {
                                 txtthongbao.setVisibility(View.INVISIBLE);
                                 gioHangAdapter.notifyDataSetChanged();
                                 EventUltil();

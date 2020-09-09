@@ -2,7 +2,6 @@ package activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +21,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -65,7 +66,6 @@ public class ThongTinKhachHang extends AppCompatActivity {
                             , new Response.Listener<String>() {
                         @Override
                         public void onResponse(final String madonhang) {
-//                        Log.d("Madonhang",response);
                             if (Integer.parseInt(madonhang) > 0) {
                                 RequestQueue requestQueue1 = Volley.newRequestQueue(getApplicationContext());
                                 StringRequest stringRequest1 = new StringRequest(Request.Method.POST, Server.Duongdanchitietdonhang,
@@ -96,16 +96,17 @@ public class ThongTinKhachHang extends AppCompatActivity {
                                         for (int i = 0; i < MainActivity.manggiohang.size(); i++) {
                                             JSONObject jsonObject = new JSONObject();
                                             try {
-                                                Intent intent = getIntent();
-                                                int luotmua = intent.getIntExtra("luotmua",-1);
-                                                Log.d("GGG",luotmua+"");
-//                                                jsonObject.put("luotmua",intent.getIntExtra("luotmua",0));
+
                                                 jsonObject.put("madonhang", madonhang);
                                                 jsonObject.put("masanpham", MainActivity.manggiohang.get(i).getIdsp());
                                                 jsonObject.put("tensanpham", MainActivity.manggiohang.get(i).getTensp());
                                                 jsonObject.put("giasanpham", MainActivity.manggiohang.get(i).getGiasp());
                                                 jsonObject.put("soluongsanpham", MainActivity.manggiohang.get(i).getSoluongsp());
-                                            } catch (JSONException e) {
+                                                jsonObject.put("hinhanhsanpham", MainActivity.manggiohang.get(i).getHinhsp()+"");//cung phai cong them xau nhe
+                                                jsonObject.put("idkhachhang", MainActivity.userId);
+                                                String mDate = DateFormat.getDateInstance().format(new Date());
+                                                jsonObject.put("ngaymuahang",mDate+""); //phải cộng thêm xâu thì bên php mới insert vào được
+                                             }catch (JSONException e) {
                                                 e.printStackTrace();
                                             }
                                             jsonArray.put(jsonObject);

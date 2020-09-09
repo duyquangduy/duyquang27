@@ -1,130 +1,180 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="activity.MainActivity">
+    android:orientation="vertical"
+    android:weightSum="10">
 
-    <androidx.drawerlayout.widget.DrawerLayout
-        android:id="@+id/drawerlayout"
+    <!--<RelativeLayout android:layout_height="match_parent"-->
+    <!--    android:layout_width="match_parent"-->
+    <!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--    xmlns:app="http://schemas.android.com/apk/res-auto">-->
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
-            android:orientation="vertical"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="activity.MainActivity"
+        android:layout_weight="9">
+
+        <androidx.drawerlayout.widget.DrawerLayout
+            android:id="@+id/drawerlayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbarmanhinhchinh"
-                android:background="#A2D863"
-                app:title="Trang chính "
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize">
-                <include
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbarmanhinhchinh"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="#A2D863"
+                    app:title="Trang chính ">
+
+                    <include
                         android:id="@+id/cartlayoutMain"
                         layout="@layout/cart"
                         android:layout_width="wrap_content"
-                    android:layout_marginLeft="200dp"
                         android:layout_height="wrap_content"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginRight="16dp"/>
+                        android:layout_marginLeft="200dp"
+                        android:layout_marginRight="16dp"
+                        app:layout_constraintEnd_toEndOf="parent" />
 
-            </androidx.appcompat.widget.Toolbar>
-            <ViewFlipper
-                android:id="@+id/viewflipper"
-                android:layout_width="match_parent"
-                android:layout_height="150dp">
-            </ViewFlipper>
-            <LinearLayout
-                android:background="#A2D863"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <TextView
-                    android:textSize="19sp"
-                    android:textStyle="bold"
-                    android:textColor="#F82404"
-                    android:layout_margin="5dp"
-                    android:text="Sản phẩm mới nhất"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerview"
+                </androidx.appcompat.widget.Toolbar>
+
+
+                <ViewFlipper
+                    android:id="@+id/viewflipper"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="150dp"
+                    android:layout_marginTop="5dp"></ViewFlipper>
 
-                </androidx.recyclerview.widget.RecyclerView>
-                <TextView
-                    android:textSize="19sp"
-                    android:textStyle="bold"
-                    android:textColor="#F82404"
-                    android:layout_margin="5dp"
-                    android:text="Sản phẩm bán chạy"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerviewsphot"
+                <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent">
 
-                </androidx.recyclerview.widget.RecyclerView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="#A2D863"
+                        android:orientation="vertical">
 
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:text="Sản phẩm mới nhất"
+                            android:textColor="#F82404"
+                            android:textSize="19sp"
+                            android:textStyle="bold" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recyclerview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:text="Sản phẩm bán chạy"
+                            android:textColor="#F82404"
+                            android:textSize="19sp"
+                            android:textStyle="bold" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recyclerviewsphot"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+                </ScrollView>
             </LinearLayout>
-        </LinearLayout>
 
-        <com.google.android.material.navigation.NavigationView
-            android:id="@+id/navigationview"
-            android:layout_gravity="start"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <LinearLayout
-                android:orientation="vertical"
+            <com.google.android.material.navigation.NavigationView
+                android:id="@+id/navigationview"
                 android:layout_width="match_parent"
-                android:layout_height="150dp">
-                <ImageView
+                android:layout_height="match_parent"
+                android:layout_gravity="start">
 
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:background="@drawable/shop_background"/>
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:layout_marginTop="5dp"
-                    android:orientation="horizontal"
-                    android:layout_weight="10"
+                    android:layout_height="150dp"
                     android:background="@android:color/holo_blue_light"
-                    android:padding="5dp">
+                    android:orientation="vertical">
+
                     <ImageView
-                        android:id="@+id/imgAvatar"
-                        android:layout_weight="3"
-                        android:src="@drawable/ic_person_black_24dp"
-                        android:layout_width="0dp"
-                        android:layout_height="70dp"/>
-                    <TextView
-                        android:id="@+id/txtUser"
-                        android:layout_gravity="center_vertical|start"
-                        android:layout_weight="5"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:textSize="14dp"
-                        android:text="Đăng nhập để mua hàng"
-                        android:textColor="#F2F6F6"/>
-                    <com.facebook.login.widget.LoginButton
-                        android:layout_marginRight="15dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:background="@drawable/background_banhang" />
 
-                        android:id="@+id/btnLogin"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_gravity="center"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_weight="10"
+                        android:background="@android:color/holo_blue_light"
+                        android:orientation="horizontal"
+                        android:padding="5dp">
+
+                        <ImageView
+                            android:id="@+id/imgAvatar"
+                            android:layout_width="0dp"
+                            android:layout_height="70dp"
+                            android:layout_weight="3"
+                            android:src="@drawable/ic_person_black_24dp" />
+
+                        <TextView
+                            android:id="@+id/txtUser"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical|start"
+                            android:layout_weight="5"
+                            android:text="Đăng nhập để mua hàng"
+                            android:textColor="#F2F6F6"
+                            android:textSize="14dp" />
+
+                        <ImageView
+                            android:id="@+id/imgexit"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_gravity="center"
+                            android:layout_marginRight="3dp"
+                            android:src="@android:color/holo_blue_light" />
+
+                        <com.facebook.login.widget.LoginButton
+                            android:id="@+id/btnLogin"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_gravity="center"
+                            android:layout_marginRight="15dp" />
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
-            <ListView
-                android:layout_marginTop="150dp"
-                android:id="@+id/listviewmanhinhchinh"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </com.google.android.material.navigation.NavigationView>
 
-    </androidx.drawerlayout.widget.DrawerLayout>
+                <ListView
+                    android:id="@+id/listviewmanhinhchinh"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="150dp" />
+            </com.google.android.material.navigation.NavigationView>
+        </androidx.drawerlayout.widget.DrawerLayout>
 
+    </LinearLayout>
+
+    <!--</RelativeLayout>-->
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:itemBackground="@android:color/white"
+        app:itemIconTint="@drawable/selector"
+        app:itemTextColor="@drawable/selector"
+        app:menu="@menu/menu_navigation">
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
 </LinearLayout>

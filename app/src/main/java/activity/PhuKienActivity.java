@@ -73,11 +73,6 @@ public class PhuKienActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.menugiohang:
-//                Intent intent = new Intent(getApplicationContext(), activity.Giohang.class);
-//                startActivity(intent);
-//        }
         return super.onOptionsItemSelected(item);
     }
 

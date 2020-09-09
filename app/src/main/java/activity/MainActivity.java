@@ -1,7 +1,9 @@
 package activity;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,6 +41,7 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -62,7 +65,7 @@ import model.Sanpham;
 import ultil.CheckConnection;
 import ultil.Server;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity<userId> extends AppCompatActivity {
     Toolbar toolbar;
     ViewFlipper viewFlipper;
     RecyclerView recyclerViewmanhinhchinh, recyclerViewSanPhamHot;
@@ -85,6 +88,9 @@ public class MainActivity extends AppCompatActivity {
 
     public static ArrayList<Giohang> manggiohang;
 
+    public static String userId;
+
+    //đếm số trên giỏ hàng
     CartCounter cartCounter;
 
     //đăng nhập facebook
@@ -94,35 +100,45 @@ public class MainActivity extends AppCompatActivity {
     private AccessTokenTracker accessTokenTracker;
 
     TextView txtUser;
-    ImageView imgAvatar;
+    ImageView imgAvatar, imgExit;
     LoginButton btnlogin;
 
+    //sqlite lưu id user
+    DatabaseUser databaseUser;
+
+    BottomNavigationView bottomNavigationView;
+
+    //int page = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        FacebookSdk.sdkInitialize(getApplicationContext());
+        FacebookSdk.sdkInitialize(getApplicationContext()); //cái này quan trọng
         setContentView(R.layout.activity_main);
 
-        anhxa();
+        databaseUser = new DatabaseUser(this,"facebookuser",null,1);
+        databaseUser.QuerryData("create table if not exists User(id VARCHAR(50))");
+
+        GetUserId();
         mAuth = FirebaseAuth.getInstance();
-
-
-        cartCounter = new CartCounter(findViewById(R.id.cartlayoutMain));
-
+//        FirebaseUser mUser = mAuth.getCurrentUser();
+//        userId = mUser.getUid();
+        //mUser với userId k dc gọi ở mỗi đây để tránh trường hợp khi đăng xuất r thoát app vào lại, mUser lúc đó sẽ null gây ra lỗi nullPointer
+        //vậy nên chỉ khi nào đăng nhập fb xong rồi mới lấy mUser với userid nhé, đặt ở hàm HandleFacebookToken bên dưới nữa nhé OK
+        // cách giải quyết là mỗi lần đăng nhập thì lưu id vào sqlite, sau đăng nhập lại thì load id ra, đăng xuât thì xóa id đi
+        anhxa();
         if (CheckConnection.haveNetworkConnection(getApplicationContext())) {
             ActionBar();
             ActionViewFlipper();
             GetDuLieuLoaisp();
             GetDuLieuSPMoiNhat();
             GetDuLieuSPHotNhat();
-            CatchOnItemListView();
             DangNhapFacebook();
+            CatchOnItemListView();
         } else {
             CheckConnection.ShowToast_Short(getApplicationContext(), "Ban hay kiem tra lai ket noi");
             finish();
         }
-
+        cartCounter = new CartCounter(findViewById(R.id.cartlayoutMain));
         cartCounter.img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,6 +146,16 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+    }
+
+    private void GetUserId() {
+        Cursor userdata = databaseUser.GetData("SELECT id FROM User");
+        while (userdata.moveToNext()){
+            mAuth = FirebaseAuth.getInstance();
+            userId = userdata.getString(0);
+           // Log.d("sqlite",userId);
+        }
     }
 
     @Override
@@ -144,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void CatchOnItemListView() {
+        GetUserId();
         listViewmanhinhchinh.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -189,13 +216,27 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case 4:
                         if (CheckConnection.haveNetworkConnection(getApplicationContext())) {
-                            Intent intent = new Intent(MainActivity.this, LienHeActivity.class);
-                            startActivity(intent);
+                            GetUserId();
+                            if (userId == null) {
+                                Toast.makeText(MainActivity.this, "Mời bạn đăng nhập", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Intent intent = new Intent(MainActivity.this, LichSuActivity.class);
+                                startActivity(intent);
+                            }
                         } else {
                             CheckConnection.ShowToast_Short(getApplicationContext(), "Kiểm tra lại kết nối");
                         }
                         drawerLayout.closeDrawer(GravityCompat.START);
                         break;
+//                    case 5:
+//                        if (CheckConnection.haveNetworkConnection(getApplicationContext())) {
+//                            Intent intent = new Intent(MainActivity.this, LienHeActivity.class);
+//                            startActivity(intent);
+//                        } else {
+//                            CheckConnection.ShowToast_Short(getApplicationContext(), "Kiểm tra lại kết nối");
+//                        }
+//                        drawerLayout.closeDrawer(GravityCompat.START);
+//                        break;
                     case 5:
                         if (CheckConnection.haveNetworkConnection(getApplicationContext())) {
                             Intent intent = new Intent(MainActivity.this, ThongtinActivity.class);
@@ -208,8 +249,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-    }   //bắt sự kiện cho thanh menu
+    }
 
+    //bắt sự kiện cho thanh menu
     private void GetDuLieuSPMoiNhat() {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Server.Duongdansanphammoinhat,
@@ -311,7 +353,8 @@ public class MainActivity extends AppCompatActivity {
                                     e.printStackTrace();
                                 }
                             }
-                            mangloaisp.add(4, new Loaisp(0, "Liên hệ", "https://www.seekpng.com/png/detail/952-9523758_contact-red-phone-icon-square.png"));
+                            mangloaisp.add(4, new Loaisp(0, "Lịch sử mua hàng", "https://daoduyquang27.000webhostapp.com/Hinhanh/AppBanHang/history.png"));
+                            //mangloaisp.add(5, new Loaisp(0, "Liên hệ", "https://www.seekpng.com/png/detail/952-9523758_contact-red-phone-icon-square.png"));
                             mangloaisp.add(5, new Loaisp(0, "Thông tin", "https://upload.wikimedia.org/wikipedia/en/thumb/3/35/Information_icon.svg/1024px-Information_icon.svg.png"));
                         }
                     }
@@ -396,28 +439,56 @@ public class MainActivity extends AppCompatActivity {
 
         txtUser = findViewById(R.id.txtUser);
         imgAvatar = findViewById(R.id.imgAvatar);
+        imgExit = findViewById(R.id.imgexit);
         btnlogin = findViewById(R.id.btnLogin);
 
-        if(manggiohang != null){
-            //nếu k null thì số lượng sản phẩm trong Cart vẫn hiển thị
-        }else {
+
+        if (manggiohang != null) {
+            //nếu k null thì số lượng sản phẩm trong Cart vẫn hiển thị, không bị khởi tạo lại
+        } else {
             manggiohang = new ArrayList<>(); //tránh trường hợp mỗi lần về Main là tạo lại manggiohang mới
         }
+
+        //bottom navigation view
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.main);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.main:
+                        startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.news:
+                        startActivity(new Intent(getApplicationContext(),TinTucActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.search:
+                        startActivity(new Intent(getApplicationContext(),TimKiemActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                }
+                return false;
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         cartCounter.setText(MainActivity.manggiohang.size());
+        //Toast.makeText(this, "ham onResume", Toast.LENGTH_SHORT).show();
         super.onResume();
     }
 
     @Override
     protected void onRestart() {
         cartCounter.setText(MainActivity.manggiohang.size());
+        //Toast.makeText(this, "ham onRestart", Toast.LENGTH_SHORT).show();
         super.onRestart();
     }
 
-    public void DangNhapFacebook(){
+    public void DangNhapFacebook() {
         btnlogin.setReadPermissions("email", "public_profile");
         callbackManager = CallbackManager.Factory.create();
         btnlogin.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -425,7 +496,6 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess(LoginResult loginResult) {
                 handleFacebookToken(loginResult.getAccessToken());
             }
-
 
             @Override
             public void onCancel() {
@@ -454,7 +524,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
                 if (currentAccessToken == null) {
+                    databaseUser.QuerryData("delete from User");
                     mAuth.signOut();
+
+                    Toast.makeText(MainActivity.this, "Đăng xuất thành công", Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -466,7 +539,7 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void handleFacebookToken(AccessToken accessToken) {
+    public void handleFacebookToken(AccessToken accessToken) {
 
         AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());
         mAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -474,8 +547,12 @@ public class MainActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     FirebaseUser user = mAuth.getCurrentUser();
+                    userId = user.getUid();
+                    Log.d("userid",userId);
+                    databaseUser.QuerryData("insert into User values('"+userId+"')");
                     updateUI(user);
                 } else {
+                    Log.d("TESTUSER", "sign in with credential fail", task.getException());
                     Toast.makeText(MainActivity.this, "Authentication failed", Toast.LENGTH_SHORT).show();
                     updateUI(null);
                 }
@@ -490,22 +567,27 @@ public class MainActivity extends AppCompatActivity {
                 String photoUrl = user.getPhotoUrl().toString();
                 photoUrl = photoUrl + "?type=large";
                 Picasso.get().load(photoUrl).into(imgAvatar);
+                imgExit.setImageResource(R.drawable.ic_logout_black_24dp);
             }
         } else {
-            txtUser.setText("");
-            imgAvatar.setImageResource(R.drawable.no_image);
+            imgExit.setImageResource(R.drawable.ic_exit_to_app_black_24dp);
+            txtUser.setText("Đăng nhập để mua hàng");
+            imgAvatar.setImageResource(R.drawable.ic_person_black_24dp);
         }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        GetUserId();
+        //Toast.makeText(this, "ham onstart", Toast.LENGTH_SHORT).show();
         mAuth.addAuthStateListener(authStateListener);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        //Toast.makeText(this, "ham onstop", Toast.LENGTH_SHORT).show();
         if (authStateListener != null) {
             mAuth.removeAuthStateListener(authStateListener);
         }

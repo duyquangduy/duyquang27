@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,7 +42,7 @@ public class DienThoaiActivity extends AppCompatActivity {
     Toolbar toolbardt;
     ListView lvdt;
     DienThoaiAdapter dienThoaiAdapter;
-    ArrayList<Sanpham> mangdt;
+   ArrayList<Sanpham> mangdt;
     int iddt = 0;
     int page = 1;
 
@@ -67,16 +66,11 @@ public class DienThoaiActivity extends AppCompatActivity {
             CheckConnection.ShowToast_Short(getApplicationContext(), "Kiểm tra lại kết nối");
             finish();
         }
-
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.menugiohang:
-//                Intent intent = new Intent(getApplicationContext(), activity.Giohang.class);
-//                startActivity(intent);
-//        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -113,7 +107,7 @@ public class DienThoaiActivity extends AppCompatActivity {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, duongdan,
                 new Response.Listener<String>() {
                     @Override
-                    public void onResponse(String response) {
+                    public void onResponse(String response) { //response là chuỗi json đó
                         int id = 0;
                         String Tendt = "";
                         int Giadt = 0;
@@ -133,6 +127,7 @@ public class DienThoaiActivity extends AppCompatActivity {
                                     Mota = jsonObject.getString("motasp");
                                     Idspdt = jsonObject.getInt("idsanpham");
                                     mangdt.add(new Sanpham(id, Tendt, Giadt, Hinhanhdt, Mota, Idspdt));
+
                                     dienThoaiAdapter.notifyDataSetChanged();
                                 }
                             } catch (JSONException e) {
@@ -175,7 +170,6 @@ public class DienThoaiActivity extends AppCompatActivity {
 
     private void GetIdloaisanpham() {
         iddt = getIntent().getIntExtra("idloaisanpham", -1);
-        Log.d("Giatriloaisanpham", iddt + "");
     }
 
     private void anhxa() {
