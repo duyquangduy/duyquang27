@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#009688</color>
+    <color name="colorPrimaryDark">#03A9F4</color>
+    <color name="colorAccent">#E91E63</color>
+    
+    <color name="dashboard_color">#6ADD6F</color>
+
+    <color name="income_color">#DCA85B</color>
+
+    <color name="expense_color">#0B2DEA</color>
+
+    <color name="date_color">#673AB7</color>
+
+    <color name="expense_amount">#EA1B1B</color>
+</resources>
