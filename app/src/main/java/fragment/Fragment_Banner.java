@@ -62,26 +62,27 @@ public class Fragment_Banner extends Fragment {
             @Override
             public void onResponse(Call<List<Quangcao>> call, Response<List<Quangcao>> response) {
                 ArrayList<Quangcao> banners = (ArrayList<Quangcao>) response.body();
-                Log.d("CCC", banners.get(0).getTenBaiHat());
-                //dua du lieu quang cao vao
-                bannerAdapter = new BannerAdapter(getActivity(), banners);
-                viewPager.setAdapter(bannerAdapter);
-                circleIndicator.setViewPager(viewPager);
-                //tu dong chuyen sang quang cao khac
-                handler = new Handler();
-                runnable = new Runnable() {   //goi nhung phuong thuc ma handler yeu cau
-                    @Override
-                    public void run() {
-                        currentItem = viewPager.getCurrentItem();
-                        currentItem++;
-                        if (currentItem >= viewPager.getAdapter().getCount()) {
-                            currentItem = 0; //neu next den quang cao cuoi cung thi quay lai dau tien
+                if(banners != null) {
+                    //dua du lieu quang cao vao
+                    bannerAdapter = new BannerAdapter(getActivity(), banners);
+                    viewPager.setAdapter(bannerAdapter);
+                    circleIndicator.setViewPager(viewPager);
+                    //tu dong chuyen sang quang cao khac
+                    handler = new Handler();
+                    runnable = new Runnable() {   //goi nhung phuong thuc ma handler yeu cau
+                        @Override
+                        public void run() {
+                            currentItem = viewPager.getCurrentItem();
+                            currentItem++;
+                            if (currentItem >= viewPager.getAdapter().getCount()) {
+                                currentItem = 0; //neu next den quang cao cuoi cung thi quay lai dau tien
+                            }
+                            viewPager.setCurrentItem(currentItem, true);
+                            handler.postDelayed(runnable, 4000); //sau 4s next 1 lan
                         }
-                        viewPager.setCurrentItem(currentItem, true);
-                        handler.postDelayed(runnable, 4000); //sau 4s next 1 lan
-                    }
-                };
-                handler.postDelayed(runnable, 4000);
+                    };
+                    handler.postDelayed(runnable, 4000);
+                }
             }
 
             @Override

@@ -20,8 +20,8 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 public class BannerAdapter  extends PagerAdapter { //custom giao dien quang cao
-    Context context;
-    ArrayList<Quangcao> arrayListbanner;
+    private Context context;
+    private ArrayList<Quangcao> arrayListbanner;
 
     public BannerAdapter(Context context, ArrayList<Quangcao> arrayListbanner) {
         this.context = context;

@@ -32,15 +32,14 @@
             android:text="Yeu Quynh Trang"
             android:textSize="17sp"
             android:id="@+id/textviewtitlebannerbaihat"
-            android:layout_toRightOf="@id/imageviewbanner"
+            android:layout_toEndOf="@id/imageviewbanner"
             android:layout_alignTop="@id/imageviewbanner"
             android:layout_marginTop="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <RelativeLayout
             android:layout_marginTop="5dp"
-
-            android:layout_toRightOf="@id/imageviewbanner"
+            android:layout_toEndOf="@id/imageviewbanner"
             android:layout_below="@id/textviewtitlebannerbaihat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -49,13 +48,10 @@
                 android:textColor="#fffdfc"
                 android:text="Nhung ca khuc hot nhat thi truong am nhac hien nay"
                 android:maxLines="2"
-                android:layout_marginRight="40dp"
+                android:layout_marginEnd="40dp"
                 android:textSize="13sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
-
         </RelativeLayout>
-
     </RelativeLayout>
-
 </RelativeLayout>
